@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TzFinance — Free Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:   #f5f0e8; --paper:   #faf7f2; --ink:     #1c1a16; --ink2:    #3d3a32;
+  --muted:   #8a8479; --forest:  #1b4332; --teal:    #0d9488; --teal2:   #27b3a2;
+  --copper:  #b45309; --copper2: #d97706; --green:   #16a34a; --red:     #dc2626;
+  --border:  rgba(28,26,22,0.1); --border2: rgba(28,26,22,0.06);
+  --shadow:  0 1px 3px rgba(28,26,22,0.08), 0 4px 16px rgba(28,26,22,0.06);
+  --shadow2: 0 2px 8px rgba(28,26,22,0.12), 0 8px 32px rgba(28,26,22,0.08);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono:  'IBM Plex Mono', monospace;
+  --sans:  'Outfit', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body { font-family: var(--sans); background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+/* --- LOGIN SCREEN --- */
+#login-screen { position: fixed; inset: 0; z-index: 200; display: flex; background: var(--forest); transition: opacity 0.7s ease, transform 0.7s ease; overflow: hidden; }
+#login-screen.out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 64px; position: relative; }
+.login-left::after { content: ''; position: absolute; right: 0; top: 60px; bottom: 60px; width: 1px; background: rgba(255,255,255,0.08); }
+.login-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 60px; }
+.brand-mark { width: 44px; height: 44px; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.brand-name { font-style: italic; font-family: var(--serif); font-size: 26px; color: rgba(255,255,255,0.9); letter-spacing: 0.02em; }
+.brand-name em { color: var(--teal2); }
+.login-headline { font-style: italic; font-family: var(--serif); font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: rgba(255,255,255,0.95); line-height: 1.15; margin-bottom: 20px; }
+.login-headline em { color: var(--teal2); }
+.login-desc { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 420px; }
+.login-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
+.pill { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; font-size: 13px; color: rgba(255,255,255,0.65); }
+.login-right { width: 440px; display: flex; align-items: center; justify-content: center; padding: 48px; background: rgba(255,255,255,0.03); }
+.login-form { width: 100%; animation: formIn 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes formIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+.form-title { font-family: var(--serif); font-size: 28px; color: rgba(255,255,255,0.9); margin-bottom: 8px; }
+.form-sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 36px; }
+.f-group { margin-bottom: 20px; }
+.f-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+.f-group input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 13px 16px; color: rgba(255,255,255,0.9); font-family: var(--sans); font-size: 15px; outline: none; transition: border-color 0.2s, background 0.2s; }
+.f-group input:focus { border-color: var(--teal2); background: rgba(255,255,255,0.08); }
+.btn-login { width: 100%; padding: 14px; background: var(--teal); border: none; border-radius: 10px; color: white; font-family: var(--sans); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; position: relative; overflow: hidden; }
+.btn-login:hover { background: var(--teal2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(13,148,136,0.35); }
+.btn-login.loading::after { content: ''; position: absolute; inset: 0; margin: auto; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- APP SHELL --- */
+#app { display: none; min-height: 100vh; }
+#app.on { display: flex; }
+.sidebar { width: 220px; min-height: 100vh; background: var(--forest); display: flex; flex-direction: column; padding: 24px 12px; position: fixed; top: 0; left: 0; z-index: 50; animation: sideIn 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes sideIn { from { transform: translateX(-220px); } to { transform: none; } }
+.s-logo { display: flex; align-items: center; gap: 10px; padding: 0 10px; margin-bottom: 40px; }
+.s-logo-mark { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.s-logo-name { font-family: var(--serif); font-size: 18px; color: rgba(255,255,255,0.85); }
+.s-logo-name em { font-style: italic; color: var(--teal2); }
+.s-section { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 0 10px; margin: 20px 0 6px; }
+.s-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 13.5px; font-weight: 400; color: rgba(255,255,255,0.45); transition: all 0.15s; border: 1px solid transparent; margin-bottom: 2px; }
+.s-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.75); }
+.s-item.on { background: rgba(20,184,166,0.12); border-color: rgba(20,184,166,0.2); color: var(--teal2); }
+.s-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+.s-badge { margin-left: auto; background: var(--teal); color: white; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; font-family: var(--mono); }
+.s-free-badge { margin: 0 4px 12px; padding: 10px; background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.2); border-radius: 10px; font-size: 11px; color: var(--teal2); text-align: center; line-height: 1.5; }
+.s-user { display: flex; align-items: center; gap: 9px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; margin-top: auto; }
+.s-avatar { width: 30px; height: 30px; background: linear-gradient(135deg, var(--teal), var(--forest)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: white; }
+
+.main { margin-left: 220px; flex: 1; min-height: 100vh; animation: mainIn 0.5s 0.1s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes mainIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); background: rgba(245,240,232,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 40; }
+.topbar-left h1 { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
+.topbar-left p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.time-pill { font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 6px 12px; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; }
+.live-pill { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); border-radius: 20px; font-size: 11.5px; font-weight: 600; color: var(--green); font-family: var(--mono); }
+.live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.content { padding: 28px 32px; }
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.kpi { background: var(--paper); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); transition: transform 0.15s; position: relative; overflow: hidden; }
+.kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); }
+.kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.kpi-value { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1; }
+.kpi-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+.card { background: var(--paper); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; }
+.card-head { padding: 20px 22px 0; }
+.card-title { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--ink); }
+.card-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.card-body { padding: 16px 22px 22px; }
+
+.news-list { display: flex; flex-direction: column; }
+.n-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--border2); }
+.n-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.n-dot.pos { background: var(--green); }
+.n-dot.neg { background: var(--red); }
+.n-dot.neu { background: var(--muted); }
+.n-title { font-size: 13px; font-weight: 500; line-height: 1.45; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: var(--mono); text-transform: uppercase; }
+.tag.pos { background: rgba(22,163,74,0.1); color: var(--green); }
+.tag.neg { background: rgba(220,38,38,0.08); color: var(--red); }
+
+.chat-wrap { height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.msg { max-width: 85%; padding: 12px 16px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+.msg.u { align-self: flex-end; background: var(--forest); color: white; border-bottom-right-radius: 4px; }
+.msg.a { align-self: flex-start; background: var(--cream); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+.chat-bar { display: flex; gap: 8px; margin-top: 14px; }
+.chat-in { flex: 1; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border); outline: none; }
+.chat-btn { padding: 11px 20px; background: var(--forest); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; }
+
+/* TABLE PORTFOLIO */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; padding: 12px; border-bottom: 2px solid var(--border); }
+td { padding: 12px; border-bottom: 1px solid var(--border2); font-size: 13px; }
+
+.content-area { display: none; }
+.content-area.on { display: block; }
+
+/* GAUGE CHART */
+.sent-ring-wrap { display: flex; justify-content: center; margin-bottom: 10px; }
+
+@media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .kpi-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-left">
+    <div class="login-brand"><div class="brand-name"><em>Tz</em>Finance</div></div>
+    <div class="login-headline">Análise financeira<br>com <em>inteligência</em><br>conservadora</div>
+    <div class="login-desc">Valuation fundamentalista, feed de notícias IA e gestão de carteira em um só lugar.</div>
+    <div class="login-pills">
+      <div class="pill">📰 Feed em tempo real</div>
+      <div class="pill">💼 Gestão de Carteira</div>
+      <div class="pill">🔍 Valuation Graham</div>
+    </div>
+  </div>
+  
+  <div class="login-right">
+    <div class="login-form">
+      <div class="form-title">Acessar plataforma</div>
+      <div class="form-sub">Efetue o login para acessar seus dados</div>
+      <div class="f-group"><label>E-mail</label><input type="email" id="inp-email" placeholder="seu@email.com"></div>
+      <div class="f-group"><label>Senha</label><input type="password" id="inp-pass" placeholder="••••••••"></div>
+      <button class="btn-login" id="btn-login" onclick="login()">Entrar no Sistema</button>
+      <div class="login-hint" id="login-error" style="color: var(--red); display: none; margin-top: 10px;">Credenciais inválidas.</div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <nav class="sidebar">
+    <div class="s-logo"><div class="s-logo-mark">📈</div><div class="s-logo-name">Invest<em>AI</em></div></div>
+    <div class="s-section">Principal</div>
+    <div class="s-item on" data-tab="dashboard" onclick="go(this,'Dashboard','Resumo geral do mercado')">
+      <span class="s-icon">⊞</span> Dashboard
+    </div>
+    <div class="s-item" data-tab="portfolio" onclick="go(this,'Minha Carteira','Gestão de patrimônio e rentabilidade')">
+      <span class="s-icon">💼</span> Carteira
+    </div>
+    <div class="s-item" data-tab="news" onclick="go(this,'Notícias','Feed IA em tempo real')">
+      <span class="s-icon">📰</span> Notícias
+      <span class="s-badge" id="news-badge">0</span>
+    </div>
+    <div class="s-section">Análise</div>
+    <div class="s-item" data-tab="valuation" onclick="go(this,'Valuation','Múltiplos e Preço Justo')">
+      <span class="s-icon">🔍</span> Valuation
+    </div>
+    <div class="s-section">Aprendizado</div>
+    <div class="s-item" data-tab="chat" onclick="go(this,'Assistente IA','Dúvidas sobre investimentos')">
+      <span class="s-icon">💬</span> Assistente
+    </div>
+    <div class="s-user" onclick="logout()">
+      <div class="s-avatar" id="s-av">U</div>
+      <div><div class="s-user-name" id="s-name">Usuário</div><div class="s-user-sub">Sair</div></div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left"><h1 id="pg-title">Dashboard</h1><p id="pg-sub">Resumo geral</p></div>
+      <div class="topbar-right">
+        <div class="time-pill" id="clock">--:--:--</div>
+        <div class="live-pill"><div class="live-dot"></div> API Conectada</div>
+      </div>
+    </div>
+
+    <div class="content content-area on" id="tab-dashboard">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Notícias no DB</div><div class="kpi-value" id="kpi-news">0</div></div>
+        <div class="kpi"><div class="kpi-label">Sentimento Positivo</div><div class="kpi-value" id="kpi-pos">0%</div></div>
+        <div class="kpi"><div class="kpi-label">Patrimônio Atual</div><div class="kpi-value" id="kpi-patrimony" style="font-size: 20px;">R$ 0,00</div></div>
+        <div class="kpi"><div class="kpi-label">Lucro Total</div><div class="kpi-value" id="kpi-profit" style="font-size: 20px;">R$ 0,00</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Feed Recente</div></div>
+        <div class="card-body"><div class="news-list" id="news-list">Aguardando notícias...</div></div>
+      </div>
+    </div>
+
+    <div class="content content-area" id="tab-portfolio">
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-label">Patrimônio Total</div>
+          <div class="kpi-value" id="port-total" style="color:var(--teal)">R$ 0,00</div>
+          <div class="kpi-sub" id="port-var">Rentabilidade: 0%</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Valor Aplicado</div>
+          <div class="kpi-value" id="port-invested">R$ 0,00</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Lucro / Prejuízo</div>
+          <div class="kpi-value" id="port-profit">R$ 0,00</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head" style="display:flex; justify-content:space-between;">
+          <div><div class="card-title">Meus Ativos</div><div class="card-sub">Cotações em tempo real</div></div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="add-tk" placeholder="Ticker" style="width:80px; padding:5px; border-radius:5px; border:1px solid var(--border);">
+            <input type="number" id="add-qty" placeholder="Qtd" style="width:60px; padding:5px; border-radius:5px; border:1px solid var(--border);">
+            <input type="number" step="0.01" id="add-price" placeholder="Preço Médio" style="width:90px; padding:5px; border-radius:5px; border:1px solid var(--border);">
+            <button onclick="addAssetAPI()" style="background:var(--forest); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">+ Adicionar</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead><tr><th>Ativo</th><th>Qtd</th><th>P. Médio</th><th>Cotação</th><th>Saldo</th><th>Rent.</th></tr></thead>
+            <tbody id="portfolio-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="content content-area" id="tab-valuation">
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input id="val-ticker" placeholder="Ticker (Ex: PETR4.SA)" style="padding:10px; border-radius:10px; border:1px solid var(--border);">
+        <button onclick="fetchValuation()" style="padding:10px 20px; background:var(--forest); color:white; border:none; border-radius:10px; cursor:pointer;">Analisar via API</button>
+      </div>
+      <div id="val-result">Insira um ticker para começar...</div>
+    </div>
+
+    <div class="content content-area" id="tab-chat">
+      <div class="card" style="max-width: 600px;">
+        <div class="card-body">
+          <div class="chat-wrap" id="chat-msgs"></div>
+          <div class="chat-bar">
+            <input class="chat-in" id="chat-in" placeholder="Dúvida financeira..." onkeypress="if(event.key==='Enter')sendMsgAPI()">
+            <button class="chat-btn" onclick="sendMsgAPI()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_URL = "http://localhost:8000";
+
+window.onload = () => {
+  if(localStorage.getItem('investai_token')) {
+    document.getElementById('login-screen').classList.add('out');
+    document.getElementById('app').classList.add('on');
+    initApp();
+  }
+};
+
+async function login() {
+  const email = document.getElementById('inp-email').value;
+  const pass = document.getElementById('inp-pass').value;
+  const formData = new URLSearchParams();
+  formData.append("username", email);
+  formData.append("password", pass);
+
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', body: formData });
+    if(res.ok) {
+      const data = await res.json();
+      localStorage.setItem('investai_token', data.access_token);
+      location.reload();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  } catch(e) { alert("Backend offline?"); }
+}
+
+function logout() { localStorage.clear(); location.reload(); }
+
+function go(el, title, sub) {
+  document.querySelectorAll('.s-item').forEach(i => i.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.content-area').forEach(c => c.classList.remove('on'));
+  document.getElementById('tab-' + el.dataset.tab).classList.add('on');
+  document.getElementById('pg-title').textContent = title;
+  document.getElementById('pg-sub').textContent = sub;
+}
+
+function initApp() {
+  setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }, 1000);
+  fetchNewsFromAPI();
+  fetchPortfolioAPI();
+}
+
+/* API NEWS */
+async function fetchNewsFromAPI() {
+  const token = localStorage.getItem('investai_token');
+  try {
+    const res = await fetch(`${API_URL}/news/feed`, { headers: {'Authorization': `Bearer ${token}`} });
+    const data = await res.json();
+    const list = document.getElementById('news-list');
+    list.innerHTML = data.slice(0,5).map(n => `
+      <div class="n-item">
+        <div class="n-dot ${n.sentiment === 'positive' ? 'pos' : 'neg'}"></div>
+        <div class="n-body">
+          <div class="n-title">${n.title}</div>
+          <div class="n-meta"><span class="tag ${n.sentiment === 'positive' ? 'pos' : 'neg'}">${n.sentiment}</span></div>
+        </div>
+      </div>`).join('');
+  } catch(e){}
+}
+
+/* API PORTFOLIO */
+async function fetchPortfolioAPI() {
+  const token = localStorage.getItem('investai_token');
+  try {
+    const res = await fetch(`${API_URL}/portfolio`, { headers: {'Authorization': `Bearer ${token}`} });
+    if(res.ok) {
+      const data = await res.json();
+      const s = data.summary;
+      document.getElementById('port-total').textContent = `R$ ${s.total_current.toFixed(2)}`;
+      document.getElementById('kpi-patrimony').textContent = `R$ ${s.total_current.toFixed(2)}`;
+      document.getElementById('port-invested').textContent = `R$ ${s.total_invested.toFixed(2)}`;
+      document.getElementById('port-profit').textContent = `R$ ${s.total_profit.toFixed(2)}`;
+      document.getElementById('kpi-profit').textContent = `R$ ${s.total_profit.toFixed(2)}`;
+      document.getElementById('port-var').textContent = `Rentabilidade: ${s.profit_pct}%`;
+
+      document.getElementById('portfolio-list').innerHTML = data.assets.map(a => `
+        <tr>
+          <td>${a.ticker}</td><td>${a.quantity}</td><td>R$ ${a.average_price}</td>
+          <td>R$ ${a.current_price}</td><td>R$ ${a.total_value}</td>
+          <td style="color:${a.profit_pct >= 0 ? 'var(--green)' : 'var(--red)'}">${a.profit_pct}%</td>
+        </tr>`).join('');
+    }
+  } catch(e){}
+}
+
+async function addAssetAPI() {
+  const token = localStorage.getItem('investai_token');
+  const body = {
+    ticker: document.getElementById('add-tk').value,
+    quantity: parseFloat(document.getElementById('add-qty').value),
+    average_price: parseFloat(document.getElementById('add-price').value)
+  };
+  await fetch(`${API_URL}/portfolio`, {
+    method: 'POST', headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  });
+  fetchPortfolioAPI();
+}
+
+/* API VALUATION */
+async function fetchValuation() {
+  const tk = document.getElementById('val-ticker').value.toUpperCase();
+  const token = localStorage.getItem('investai_token');
+  const res = await fetch(`${API_URL}/valuation/${tk}`, { headers: {'Authorization': `Bearer ${token}`} });
+  const d = await res.json();
+  const g = d.graham;
+  document.getElementById('val-result').innerHTML = `
+    <div class="card">
+      <div class="card-body">
+        <h3>${d.name}</h3>
+        <p>Preço Justo (Graham): R$ ${g.number || 'N/A'}</p>
+        <p>Margem de Segurança: ${g.margin_of_safety_pct || 0}%</p>
+      </div>
+    </div>`;
+}
+
+/* API CHAT */
+async function sendMsgAPI() {
+  const inp = document.getElementById('chat-in');
+  const txt = inp.value; if(!txt) return;
+  const token = localStorage.getItem('investai_token');
+  addMsg(txt, 'u'); inp.value = '';
+  const res = await fetch(`${API_URL}/chat?question=${txt}`, { method:'POST', headers: {'Authorization': `Bearer ${token}`} });
+  const data = await res.json();
+  addMsg(data.answer, 'a');
+}
+function addMsg(t, r) {
+  const m = document.getElementById('chat-msgs');
+  const d = document.createElement('div'); d.className = 'msg ' + r; d.textContent = t;
+  m.appendChild(d); m.scrollTop = m.scrollHeight;
+}
+</script>
+</body>
+</html>

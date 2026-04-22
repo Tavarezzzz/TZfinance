@@ -1,0 +1,38 @@
+# ─── InvestAI Production — Dependências Otimizadas (100% Gratuitas) ─────────
+
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.12
+
+# Banco de dados (Suporta modo Local e Nuvem via MotherDuck)
+duckdb==1.1.3
+
+# Auth e Segurança
+bcrypt==4.2.0
+PyJWT==2.9.0
+
+# Dados financeiros (Yahoo Finance, gratuito) e Simulações (Monte Carlo)
+yfinance==0.2.50
+pandas==2.2.3
+numpy==1.26.4
+
+# Web / RSS / Integração com APIs externas (Groq)
+httpx==0.28.0
+feedparser==6.0.11
+
+# Validação e Configuração
+pydantic==2.10.0
+python-dotenv==1.0.1
+
+# ── IA Gratuita (API Groq) ────────────────────────────────────────────────────
+# NOTA: vaderSentiment FOI REMOVIDO!
+# A análise de sentimento agora é feita em lote chamando a API do Groq (Llama-3)
+# nativamente via 'httpx'. Isso garante uma análise muito mais inteligente
+# do contexto financeiro em português/inglês, mantendo o custo zero.
+
+# ── Opcionais (Apenas se for evoluir para RAG 100% local com PDFs) ───────────
+# Se no futuro você quiser processar os PDFs localmente em vez de usar
+# a base de conhecimento embutida, descomente estas linhas:
+# sentence-transformers==3.3.1
+# faiss-cpu==1.9.0

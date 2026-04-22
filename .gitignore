@@ -1,0 +1,13 @@
+# Ambientes Virtuais
+.venv/
+venv/
+__pycache__/
+
+# Banco de Dados
+data/
+*.duckdb
+*.wal
+
+# Configurações Sensíveis
+.env
+.streamlit/
