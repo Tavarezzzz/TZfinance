@@ -31,7 +31,6 @@ Instale as dependências:
 Bash
 uv pip install -r requirements_free.txt
 Inicie o Backend:
-
 Bash
 uv run uvicorn backend:app --reload
 Acesse o Frontend:
