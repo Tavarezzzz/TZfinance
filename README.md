@@ -1,5 +1,5 @@
 📈 TZFinance
-O TZFinance é uma plataforma de investimentos focada em educação financeira, análise fundamentalista e inteligência preditiva. O objetivo é fornecer ferramentas profissionais de análise de forma simples e 100% gratuita.
+O TZFinance é uma plataforma de investimentos focada em educação financeira, análise fundamentalista e inteligência preditiva. O objetivo é fornecer ferramentas profissionais de análise de forma simples e 100% gratuita para ajudar na construção da sua carteira de investimentos.
 
 🚀 O que o site proporciona?
 💼 Gestão de Carteira: Monitore seus ativos, preço médio e rentabilidade total em tempo real, com interface inspirada no Investidor 10.
